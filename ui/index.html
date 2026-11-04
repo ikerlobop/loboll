@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LoboLL</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f6f6f4;
+    --panel: #ffffff;
+    --text: #1c1d1f;
+    --muted: #63666c;
+    --line: #dcdcd8;
+    --accent: #2457c5;
+    --accent-text: #ffffff;
+    --user: #e7ecf7;
+    --error: #b3261e;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17181a;
+      --panel: #212326;
+      --text: #ececea;
+      --muted: #a2a5ab;
+      --line: #36383c;
+      --accent: #8cb0ff;
+      --accent-text: #10131a;
+      --user: #2a3347;
+      --error: #ff8a80;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.5 system-ui, sans-serif;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+  }
+  h1 { margin: 0; font-size: 17px; }
+  #status { color: var(--muted); font-size: 14px; flex: 1; }
+  button {
+    font: inherit;
+    padding: 7px 14px;
+    color: var(--text);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    cursor: pointer;
+  }
+  button:disabled { opacity: .5; cursor: default; }
+  #vscode-option { display: flex; align-items: center; gap: 5px; color: var(--muted); font-size: 14px; }
+  header { flex-wrap: wrap; }
+  button.primary {
+    color: var(--accent-text);
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  #metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .metric { padding: 7px 16px; background: var(--panel); }
+  .metric span { display: block; color: var(--muted); font-size: 12px; }
+  .metric b { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  main { flex: 1; min-height: 0; overflow-y: auto; padding: 18px 16px; }
+  #log { display: flex; flex-direction: column; gap: 12px; max-width: 820px; margin: auto; }
+  #empty { color: var(--muted); text-align: center; padding-top: 12vh; }
+  .msg {
+    padding: 9px 13px;
+    border-radius: 9px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .user { align-self: flex-end; max-width: 85%; background: var(--user); }
+  .assistant { background: var(--panel); border: 1px solid var(--line); }
+  .error { color: var(--error); border: 1px solid var(--error); }
+  footer { padding: 10px 16px 14px; background: var(--panel); border-top: 1px solid var(--line); }
+  form, details { max-width: 820px; margin: auto; }
+  form { display: flex; align-items: flex-end; gap: 8px; }
+  textarea, input {
+    font: inherit;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    padding: 8px 10px;
+  }
+  form textarea { flex: 1; min-width: 0; height: 64px; resize: vertical; }
+  details { margin-top: 8px; color: var(--muted); font-size: 14px; }
+  summary { cursor: pointer; }
+  .settings { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+  .settings label { display: flex; flex-direction: column; gap: 3px; }
+  .settings input { width: 120px; }
+  .settings label.wide { flex: 1 1 100%; }
+  .settings textarea { width: 100%; height: 56px; resize: vertical; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>LoboLL</h1>
+  <div id="status" role="status">Conectando…</div>
+  <label id="vscode-option"><input id="vscode" type="checkbox"> Incluir VS Code</label>
+  <button id="focus" type="button">Liberar RAM</button>
+  <button id="reset" type="button">Nueva conversación</button>
+</header>
+
+<section id="metrics" aria-label="Rendimiento">
+  <div class="metric"><span>Generación</span><b id="m-gen">–</b></div>
+  <div class="metric"><span>Lectura del prompt</span><b id="m-prompt">–</b></div>
+  <div class="metric"><span>Reutilizado de caché</span><b id="m-cache">–</b></div>
+  <div class="metric"><span>Especulación aceptada</span><b id="m-draft">–</b></div>
+  <div class="metric"><span>Contexto usado</span><b id="m-ctx">–</b></div>
+  <div class="metric"><span>RAM fija</span><b id="m-fixed">–</b></div>
+  <div class="metric"><span>Modelo mapeado</span><b id="m-mapped">–</b></div>
+  <div class="metric"><span>RAM libre del sistema</span><b id="m-free">–</b></div>
+</section>
+
+<main id="scroller">
+  <div id="log" aria-live="polite">
+    <p id="empty">Escribe un mensaje para probar el modelo.</p>
+  </div>
+</main>
+
+<footer>
+  <form id="form">
+    <textarea id="input" placeholder="Escribe aquí. Enter envía, Mayús+Enter añade una línea." aria-label="Mensaje"></textarea>
+    <button id="send" class="primary" type="submit" disabled>Enviar</button>
+  </form>
+  <details>
+    <summary>Ajustes</summary>
+    <div class="settings">
+      <label>Temperatura <input id="temperature" type="number" min="0" max="2" step="0.1" value="0.7"></label>
+      <label>Máximo de tokens <input id="max-tokens" type="number" min="1" step="1" value="512"></label>
+      <label class="wide">Instrucción del sistema <textarea id="system"></textarea></label>
+    </div>
+  </details>
+</footer>
+
+<script>
+const STATS_URL = `http://${location.hostname}:8081/stats`;
+const FOCUS_URL = `http://${location.hostname}:8081/focus`;
+const $ = (id) => document.getElementById(id);
+const log = $('log');
+const scroller = $('scroller');
+const input = $('input');
+const sendButton = $('send');
+
+let messages = [];
+let controller = null;
+let contextSize = null;
+let ready = false;
+let frozenCount = 0;
+
+const setMetric = (id, value) => { $(id).textContent = value; };
+const speed = (value) => `${value.toFixed(1)} tok/s`;
+const gigabytes = (bytes) => `${(bytes / 1024 ** 3).toFixed(2)} GB`;
+
+function addMessage(role, text = '') {
+  $('empty')?.remove();
+  const node = document.createElement('div');
+  node.className = `msg ${role}`;
+  node.textContent = text;
+  log.append(node);
+  scroller.scrollTop = scroller.scrollHeight;
+  return node;
+}
+
+function appendText(node, text) {
+  const pinned = scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight < 60;
+  node.textContent += text;
+  if (pinned) scroller.scrollTop = scroller.scrollHeight;
+}
+
+function showTimings(t) {
+  setMetric('m-gen', speed(t.predicted_per_second));
+  setMetric('m-prompt', t.prompt_n > 0 ? speed(t.prompt_per_second) : 'nada que leer');
+  setMetric('m-cache', `${t.cache_n ?? 0} tokens`);
+  setMetric('m-draft', t.draft_n ? `${t.draft_n_accepted} de ${t.draft_n}` : 'sin propuestas');
+  if (contextSize) {
+    const used = (t.cache_n ?? 0) + t.prompt_n + t.predicted_n;
+    setMetric('m-ctx', `${used} de ${contextSize}`);
+  }
+}
+
+// Lee la respuesta del servidor evento a evento y devuelve el texto completo.
+async function readStream(response, node) {
+  const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
+  let buffer = '';
+  let text = '';
+  let tokens = 0;
+  let firstTokenAt = null;
+
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) return text;
+    buffer += value;
+    const lines = buffer.split('\n');
+    buffer = lines.pop();
+    for (const line of lines) {
+      if (!line.startsWith('data: ') || line === 'data: [DONE]') continue;
+      const event = JSON.parse(line.slice(6));
+      if (event.error) throw new Error(event.error.message);
+      const piece = event.choices?.[0]?.delta?.content;
+      if (piece) {
+        text += piece;
+        appendText(node, piece);
+        tokens += 1;
+        firstTokenAt ??= performance.now();
+        const seconds = (performance.now() - firstTokenAt) / 1000;
+        if (seconds > 0.5) setMetric('m-gen', `~${speed((tokens - 1) / seconds)}`);
+      }
+      if (event.timings) showTimings(event.timings);
+    }
+  }
+}
+
+async function send(text) {
+  messages.push({ role: 'user', content: text });
+  addMessage('user', text);
+  const node = addMessage('assistant');
+  setBusy(true);
+  $('status').textContent = 'Leyendo el prompt…';
+  controller = new AbortController();
+
+  const system = $('system').value.trim();
+  const body = {
+    messages: system ? [{ role: 'system', content: system }, ...messages] : messages,
+    stream: true,
+    cache_prompt: true,
+    temperature: Number($('temperature').value),
+    max_tokens: Number($('max-tokens').value),
+  };
+
+  let reply = '';
+  try {
+    const response = await fetch('/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+    if (!response.ok) {
+      const detail = await response.json().catch(() => null);
+      throw new Error(detail?.error?.message ?? `Error ${response.status}`);
+    }
+    $('status').textContent = 'Generando…';
+    reply = await readStream(response, node);
+    $('status').textContent = 'Listo';
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      reply = node.textContent;
+      $('status').textContent = 'Detenido';
+    } else {
+      reply = node.textContent;
+      addMessage('error', `No se pudo completar la respuesta: ${error.message}`);
+      $('status').textContent = 'Error';
+    }
+  } finally {
+    if (reply) {
+      messages.push({ role: 'assistant', content: reply });
+    } else {
+      node.remove();
+      messages.pop();
+    }
+    controller = null;
+    setBusy(false);
+    input.focus();
+  }
+}
+
+function setBusy(busy) {
+  sendButton.textContent = busy ? 'Detener' : 'Enviar';
+  sendButton.classList.toggle('primary', !busy);
+  sendButton.disabled = !ready;
+}
+
+$('form').addEventListener('submit', (event) => {
+  event.preventDefault();
+  if (controller) {
+    controller.abort();
+    return;
+  }
+  const text = input.value.trim();
+  if (!text || !ready) return;
+  input.value = '';
+  send(text);
+});
+
+input.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {
+    event.preventDefault();
+    if (!controller) $('form').requestSubmit();
+  }
+});
+
+$('reset').addEventListener('click', () => {
+  controller?.abort();
+  messages = [];
+  log.replaceChildren();
+  ['m-gen', 'm-prompt', 'm-cache', 'm-draft', 'm-ctx'].forEach((id) => setMetric(id, '–'));
+  $('status').textContent = ready ? 'Listo' : $('status').textContent;
+  input.focus();
+});
+
+// Si la interfaz está en un navegador Chromium no se congela ese navegador,
+// porque el botón para reanudar dejaría de responder.
+const CHROMIUM_FAMILY = ['chrome', 'chromium', 'brave', 'opera'];
+const browserExclusions = () => (/Chrome|Chromium/.test(navigator.userAgent) ? CHROMIUM_FAMILY : []);
+
+function setFrozen(count) {
+  frozenCount = count;
+  $('focus').textContent = count > 0 ? 'Reanudar programas' : 'Liberar RAM';
+  $('vscode-option').hidden = count > 0;
+}
+
+async function toggleFocus() {
+  const resuming = frozenCount > 0;
+  const includeVscode = $('vscode').checked;
+  if (!resuming && includeVscode && !window.confirm(
+    'VS Code se congelará hasta que pulses «Reanudar programas» o cierres LoboLL. ' +
+    'Claude Code tampoco responderá mientras tanto. ¿Continuar?')) return;
+  $('focus').disabled = true;
+  $('status').textContent = resuming ? 'Reanudando programas…' : 'Liberando RAM…';
+  try {
+    const response = await fetch(FOCUS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: resuming ? 'off' : 'on',
+        vscode: includeVscode,
+        exclude: browserExclusions(),
+      }),
+    });
+    if (!response.ok) throw new Error(`Error ${response.status}`);
+    const result = await response.json();
+    if (resuming) {
+      setFrozen(0);
+      $('status').textContent = `Reanudados ${result.resumed} procesos; pueden tardar un poco en responder`;
+    } else {
+      const names = Object.keys(result.counts);
+      setFrozen(Object.values(result.counts).reduce((a, b) => a + b, 0));
+      $('status').textContent = names.length
+        ? `Congelados: ${names.join(', ')} · ${gigabytes(result.freed)} de RAM liberados`
+        : 'No había programas pesados que congelar';
+    }
+  } catch (error) {
+    $('status').textContent = `No se pudo cambiar: ${error.message}`;
+  } finally {
+    $('focus').disabled = false;
+    refreshMemory();
+  }
+}
+
+$('focus').addEventListener('click', toggleFocus);
+
+async function refreshMemory() {
+  if (document.hidden) return;
+  try {
+    const response = await fetch(STATS_URL);
+    const stats = await response.json();
+    setFrozen(stats.frozen);
+    setMetric('m-fixed', gigabytes(stats.fixed));
+    setMetric('m-mapped', gigabytes(stats.mapped));
+    setMetric('m-free', gigabytes(stats.available));
+  } catch {
+    ['m-fixed', 'm-mapped', 'm-free'].forEach((id) => setMetric(id, 'sin datos'));
+  }
+}
+
+async function connect() {
+  try {
+    const response = await fetch('/props');
+    if (!response.ok) throw new Error(`Error ${response.status}`);
+    const props = await response.json();
+    contextSize = props.default_generation_settings?.n_ctx ?? null;
+    const name = (props.model_path ?? '').split('/').pop().replace('.gguf', '');
+    ready = true;
+    sendButton.disabled = false;
+    $('status').textContent = name ? `Listo · ${name}` : 'Listo';
+    input.focus();
+  } catch {
+    $('status').textContent = 'Esperando al servidor…';
+    setTimeout(connect, 1500);
+  }
+}
+
+connect();
+refreshMemory();
+setInterval(refreshMemory, 2000);
+</script>
+</body>
+</html>

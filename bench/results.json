@@ -1,0 +1,134 @@
+[
+ {
+  "prompt_n": 140,
+  "prompt_tps": 9.407205373362112,
+  "gen_n": 128,
+  "gen_tps": 5.728628169651398,
+  "rss_gb": 2.0314292907714844,
+  "text": "The first computers were built using vacuum tubes. These were the predecessors of the transistor, and were used to amplify signals in early radio sets. The first computer, the ENIAC, was built in 1945 at the University of Pennsylvania. It had 17,000 vacuum tubes, and was 30 feet long. The ENIAC was used to calculate artillery firing tables, and it took a few seconds to perform a calculation that would take a human a few minutes.\n\nThe vacuum tube was a very unreliable component. It would often fail after a few hours of operation, and it was difficult to diagnose the problem. The ENI",
+  "engine": "ollama",
+  "threads": 2,
+  "round": 0
+ },
+ {
+  "prompt_n": 140,
+  "prompt_tps": 15.779756083293217,
+  "gen_n": 128,
+  "gen_tps": 7.5160412738376134,
+  "rss_gb": 3.2584266662597656,
+  "text": "The first computers were built using vacuum tubes. These were the predecessors of the transistor, and were used to amplify signals in telephone exchanges and in radar systems. The first computer was built in 1943 at the Moore School of Electrical Engineering at the University of Pennsylvania. It was called ENIAC, and was the size of a large room. It had 17,000 vacuum tubes, and was powered by 6,000 watts of electricity. The computer could add two numbers together in about 30 seconds. The computer was programmed by wiring together the various components, and by changing the values of the wires. The computer could not be",
+  "engine": "llama",
+  "threads": 2,
+  "round": 0
+ },
+ {
+  "prompt_n": 140,
+  "prompt_tps": 9.959637093096921,
+  "gen_n": 128,
+  "gen_tps": 7.152304101285812,
+  "rss_gb": 2.031566619873047,
+  "text": "The first computers were built using vacuum tubes. These were the predecessors of the transistor, and were used to amplify signals in early radio sets. The first electronic computer was the ENIAC, built in 1945 at the University of Pennsylvania. It had 17,000 vacuum tubes, and was 30 feet long, 60 feet wide, and 10 feet high. It was powered by 18,000 watts of electricity, and weighed 30 tons. The ENIAC was used to calculate artillery firing tables, and was the first computer to be used for military purposes.\n\nThe ENIAC was followed by a series of",
+  "engine": "ollama",
+  "threads": 4,
+  "round": 0
+ },
+ {
+  "prompt_n": 140,
+  "prompt_tps": 17.386971644084714,
+  "gen_n": 128,
+  "gen_tps": 7.756309696865095,
+  "rss_gb": 3.258502960205078,
+  "text": "The first computers were built using vacuum tubes. These were the predecessors of the transistor, and were used to amplify signals in telephone exchanges and in early radar systems. The first computer, the ENIAC, was built in 1945 at the University of Pennsylvania. It had 17,000 vacuum tubes, and was 30 feet long. The ENIAC was used to calculate artillery firing tables, and it took a few seconds to add two numbers. The ENIAC was followed by the EDVAC, which was the first computer to use stored programs. The EDVAC was built in 1949, and it used",
+  "engine": "llama",
+  "threads": 4,
+  "round": 0
+ },
+ {
+  "prompt_n": 140,
+  "prompt_tps": 17.380286757351207,
+  "gen_n": 128,
+  "gen_tps": 7.514937417435543,
+  "rss_gb": 3.2584228515625,
+  "text": "The first computers were built using vacuum tubes. These were the predecessors of the transistor, and were used in the 1940s and 1950s. The first computer was the ENIAC, which was built in 1945. It had 17,000 vacuum tubes and weighed 30 tons. The ENIAC was used to calculate artillery firing tables, but it was very slow and required a lot of power.\n\nThe next generation of computers was built using transistors. Transistors were invented in 1947, and they were much smaller and faster than vacuum tubes. The first computer to use transistors",
+  "engine": "llama",
+  "threads": 2,
+  "round": 1
+ },
+ {
+  "prompt_n": 140,
+  "prompt_tps": 9.368434146729975,
+  "gen_n": 128,
+  "gen_tps": 6.931204213878279,
+  "rss_gb": 2.0307083129882812,
+  "text": "The first computers were built using vacuum tubes. These were the predecessors of the transistor, and were used to amplify signals in early radio sets. The first computer was built in 1943 at the Moore School of Engineering at the University of Pennsylvania. It was called ENIAC, and was the first general-purpose computer. ENIAC was a massive machine, occupying 1,800 square feet of floor space, and containing 18,000 vacuum tubes. It was powered by 6,000 watts of electricity, and could perform 5,000 additions per second. The machine was programmed by wiring together a series of switches, and",
+  "engine": "ollama",
+  "threads": 2,
+  "round": 1
+ },
+ {
+  "prompt_n": 140,
+  "prompt_tps": 17.32918192150425,
+  "gen_n": 128,
+  "gen_tps": 7.767876759148846,
+  "rss_gb": 3.2584075927734375,
+  "text": "The first computers were built using vacuum tubes. These were the predecessors of the transistor, and were used to amplify signals in telephone exchanges. The first computer was built in 1943 at the University of Pennsylvania. It was called ENIAC, and was the size of a large room. It had 17,000 vacuum tubes, and used 10,000 watts of power. The first computer program was written for ENIAC, and it took a few seconds to add two numbers together.\n\nThe vacuum tube was a very unreliable component. It would often fail after a few hours of use. This meant that computers had to be very",
+  "engine": "llama",
+  "threads": 4,
+  "round": 1
+ },
+ {
+  "prompt_n": 140,
+  "prompt_tps": 9.97344772005524,
+  "gen_n": 128,
+  "gen_tps": 6.991145273250002,
+  "rss_gb": 2.030811309814453,
+  "text": "The first computers were built using vacuum tubes. These were the predecessors of the transistor, and were used to amplify signals in early radio sets. The first electronic computer was the Colossus, built by the British to break the German Enigma code. It had 1500 vacuum tubes, and was about the size of a large room. The first computer to use a stored program was the Harvard Mark I, built by Howard Aiken at Harvard University. It had 4,500 vacuum tubes, and was about the size of a large room. The first computer to use a magnetic drum for memory was the ENIAC, built by",
+  "engine": "ollama",
+  "threads": 4,
+  "round": 1
+ },
+ {
+  "prompt_n": 140,
+  "prompt_tps": 9.378637765291286,
+  "gen_n": 128,
+  "gen_tps": 6.5814895665277655,
+  "rss_gb": 2.03070068359375,
+  "text": "The first computers were built using vacuum tubes. These were the predecessors of the transistor, and were used in the 1940s and 1950s. The first computer, the ENIAC, was built in 1945. It had 17,000 vacuum tubes, and was about the size of a large room. The ENIAC was used to calculate artillery tables for the US Army.\n\nThe vacuum tube was a very unreliable component. It would often fail after a few hours of use. This meant that the computers had to be constantly repaired. The ENIAC was so unreliable that it was only used for a few",
+  "engine": "ollama",
+  "threads": 2,
+  "round": 2
+ },
+ {
+  "prompt_n": 140,
+  "prompt_tps": 17.36066116341975,
+  "gen_n": 128,
+  "gen_tps": 7.449069625867252,
+  "rss_gb": 3.2584762573242188,
+  "text": "The first computers were built using vacuum tubes. These were the predecessors of the transistor, and were used to amplify signals in telephone exchanges and in radar systems. The first computer was built in 1943 at the Moore School of Electrical Engineering at the University of Pennsylvania. It was called ENIAC, and was the size of a large living room. It had 17,000 vacuum tubes, and consumed 160 kW of power. It was programmed by switching the positions of wires that connected the tubes to the right inputs and outputs. The machine could add two numbers together in about 30 seconds, but it was not possible to store the",
+  "engine": "llama",
+  "threads": 2,
+  "round": 2
+ },
+ {
+  "prompt_n": 140,
+  "prompt_tps": 9.964728182623297,
+  "gen_n": 128,
+  "gen_tps": 7.144848067130998,
+  "rss_gb": 2.031177520751953,
+  "text": "The first computers were built using vacuum tubes. These were the predecessors of the transistor, and they were bulky, unreliable, and expensive. The first computer, ENIAC, was built in 1945 at the University of Pennsylvania. It had 17,000 vacuum tubes, and it took up 1,800 square feet of floor space. The second computer, ENIAC II, was built in 1948 at the University of Pennsylvania. It had 3,000 vacuum tubes, and it took up 1,200 square feet of floor space.\n\nThe first computer, ENIAC, was used for calculating artillery tables",
+  "engine": "ollama",
+  "threads": 4,
+  "round": 2
+ },
+ {
+  "prompt_n": 140,
+  "prompt_tps": 17.279662700984076,
+  "gen_n": 128,
+  "gen_tps": 7.844618249065147,
+  "rss_gb": 3.2585601806640625,
+  "text": "The first computers were built using vacuum tubes. These were the predecessors of the transistor, and were used to amplify signals in telephone exchanges and in radar systems. The first computer was built in 1943 at the Moore School of Engineering at the University of Pennsylvania. It was called ENIAC, and was the size of a large living room. It had 17,000 vacuum tubes, and was powered by 6,000 watts of electricity. The computer could add two numbers together in about 20 seconds. The computer was programmed by wiring together the various components, and by changing the wiring, the program could be changed. The computer",
+  "engine": "llama",
+  "threads": 4,
+  "round": 2
+ }
+]

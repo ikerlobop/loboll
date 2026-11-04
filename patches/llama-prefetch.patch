@@ -1,0 +1,48 @@
+From 1c02115d4ecb83785a7ddb94813f5460bc22164f Mon Sep 17 00:00:00 2001
+From: iker <ikerlobop@gmail.com>
+Date: Wed, 4 Nov 2026 02:04:18 +0100
+Subject: [PATCH] ggml-cpu : add optional prefetch to q4_K and q6_K dot on AVX2
+
+Assisted-by: Claude Opus 5.5
+---
+ ggml/src/ggml-cpu/arch/x86/quants.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/ggml/src/ggml-cpu/arch/x86/quants.c b/ggml/src/ggml-cpu/arch/x86/quants.c
+index 21cd631..d1de3e7 100644
+--- a/ggml/src/ggml-cpu/arch/x86/quants.c
++++ b/ggml/src/ggml-cpu/arch/x86/quants.c
+@@ -2127,6 +2127,14 @@ void ggml_vec_dot_q4_K_q8_K(int n, float * GGML_RESTRICT s, size_t bs, const voi
+ 
+    for (int i = 0; i < nb; ++i) {
+ 
++#if defined(LOBO_PREFETCH_BLOCKS)
++        // block_q4_K is 144 bytes, so it spans at most 3 cache lines
++        const char * pf = (const char *)&x[i + LOBO_PREFETCH_BLOCKS];
++        _mm_prefetch(pf, _MM_HINT_T0);
++        _mm_prefetch(pf + 64, _MM_HINT_T0);
++        _mm_prefetch(pf + 128, _MM_HINT_T0);
++#endif
++
+         const float d = y[i].d * GGML_CPU_FP16_TO_FP32(x[i].d);
+         const float dmin = -y[i].d * GGML_CPU_FP16_TO_FP32(x[i].dmin);
+ 
+@@ -2509,6 +2517,15 @@ void ggml_vec_dot_q6_K_q8_K(int n, float * GGML_RESTRICT s, size_t bs, const voi
+ 
+     for (int i = 0; i < nb; ++i) {
+ 
++#if defined(LOBO_PREFETCH_BLOCKS)
++        // block_q6_K is 212 bytes, so it spans at most 4 cache lines
++        const char * pf = (const char *)&x[i + LOBO_PREFETCH_BLOCKS];
++        _mm_prefetch(pf, _MM_HINT_T0);
++        _mm_prefetch(pf + 64, _MM_HINT_T0);
++        _mm_prefetch(pf + 128, _MM_HINT_T0);
++        _mm_prefetch(pf + 192, _MM_HINT_T0);
++#endif
++
+         const float d = y[i].d * GGML_CPU_FP16_TO_FP32(x[i].d);
+ 
+         const uint8_t * GGML_RESTRICT q4 = x[i].ql;
+-- 
+2.43.0
+
